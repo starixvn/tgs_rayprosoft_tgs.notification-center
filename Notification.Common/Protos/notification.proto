@@ -1,0 +1,27 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Tgs.Notification.Protos";
+
+import "phoenix/protobuf/guid.proto";
+
+message NotificationRequest {
+	string type = 1;
+	string user = 2;
+	string payload = 3;
+}
+
+message BroadcastNotificationRequest {
+	phoenix.protobuf.GuidValue id = 1;
+	string type = 2;
+	string user = 3;
+	string payload = 4;
+}
+
+message BroadcastNotificationAcceptedResponse {
+	phoenix.protobuf.GuidValue id = 1;
+	string user = 2;
+}
+
+message ResendNotificationRequest {
+	string user = 1;
+}
