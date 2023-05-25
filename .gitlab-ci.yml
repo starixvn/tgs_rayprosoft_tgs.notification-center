@@ -69,7 +69,7 @@ deploy-staging:
     name: staging
   stage: deploy-staging
   needs:
-    - deploy-service-dev
+    - deploy-dev
     - job: push-k8s-template
       artifacts: true
   script:
@@ -87,7 +87,7 @@ deploy-prod:
     name: prod
   stage: deploy-prod
   needs:
-    - deploy-service-staging
+    - deploy-staging
     - job: push-k8s-template
       artifacts: true
   script:
