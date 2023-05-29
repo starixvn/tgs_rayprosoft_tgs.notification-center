@@ -1,4 +1,5 @@
 ﻿using FluentdForward.OpenTelemetry.MessagePack;
+using Microsoft.AspNetCore.Mvc;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -29,6 +30,11 @@ builder.Logging
 	});
 
 builder.Services
+	.AddRouting(routeOpt => routeOpt.LowercaseUrls = true)
+	.AddControllers()
+	.AddMvcOptions(mvcOptions => mvcOptions.AddWebApiToolkitFilters());
+
+builder.Services
 	.AddSingleton(sp => new RedisConnectionManager(
 		builder.Configuration.GetConnectionString("Redis")!))
 	.AddNotificationRepositories(sp => sp.GetRequiredService<RedisConnectionManager>().Database)
@@ -49,6 +55,22 @@ builder.Services
 			"tgs.notify.resend",
 			"tgs.notify.resend"))
 	.AddNatsGlobPatternExchange("*");
+
+builder.Services
+	.AddSwaggerGen(options =>
+	{
+		options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+		{
+			Version = "v1",
+			Title = "Notification Center Api"
+		});
+
+		options.ApplyWebApiToolkitSupport();
+
+		var xmlFileNames = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.xml");
+		foreach (var xmlFileName in xmlFileNames)
+			options.IncludeXmlComments(xmlFileName);
+	});
 
 builder.Services
 	.AddHealthChecks()
@@ -75,6 +97,9 @@ builder.Services
 
 var app = builder.Build();
 
+app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
 app.MapHealthChecks("/healthz");
 
 app.Run();
