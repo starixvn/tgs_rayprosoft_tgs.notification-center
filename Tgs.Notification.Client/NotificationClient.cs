@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Google.Protobuf;
-using Tgs.MessageQueue;
 using Tgs.Notification.Protos;
+using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.Client;
 

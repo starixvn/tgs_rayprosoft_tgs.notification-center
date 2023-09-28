@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;
-using Tgs.MessageQueue;
 using Tgs.Notification.Protos;
 using Tgs.NotificationCenter.ViewModels;
 using Tgs.WebApi.Toolkits;
+using Valhalla.MessageQueue;
 
 namespace Tgs.NotificationCenter.Controller;
 
