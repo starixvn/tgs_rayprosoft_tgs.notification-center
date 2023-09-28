@@ -80,6 +80,7 @@ builder.Services
 		.SetResourceBuilder(ResourceBuilder.CreateDefault()
 			.AddEnvironmentVariableDetector())
 		.AddSource("Tgs.*")
+		.AddSource("Valhalla.*")
 		.AddAspNetCoreInstrumentation()
 		.AddOtlpExporter())
 	.WithMetrics(meterBuiler => meterBuiler
