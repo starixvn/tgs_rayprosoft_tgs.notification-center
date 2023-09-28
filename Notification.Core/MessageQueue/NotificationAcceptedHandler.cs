@@ -1,5 +1,5 @@
-﻿using Tgs.MessageQueue;
-using Tgs.Notification.Protos;
+﻿using Tgs.Notification.Protos;
+using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.MessageQueue;
 

@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Tgs.Notification.Client</PackageId>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>Raypro</Authors>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs.notification-center</PackageProjectUrl>
     <RepositoryUrl>https://gitlab.com/rayprosoft/tgs.notification-center.git</RepositoryUrl>
@@ -14,11 +14,11 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.24.3" />
+    <PackageReference Include="PhoenixToolkits.MessageQueue" Version="1.0.3" />
     <PackageReference Include="PhoenixToolkits.NuGet.BuildTools" Version="0.0.3">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.6" />
-    <PackageReference Include="Tgs.MessageQueue" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>

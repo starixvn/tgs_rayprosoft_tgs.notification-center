@@ -1,8 +1,7 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Google.Protobuf;
-using Tgs.MessageQueue;
 using Tgs.Notification.Protos;
+using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.MessageQueue;
 

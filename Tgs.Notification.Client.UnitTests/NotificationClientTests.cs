@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using Tgs.MessageQueue;
+using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.Client.UnitTests;
 

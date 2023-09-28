@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
 using Google.Protobuf;
 using NSubstitute;
-using Tgs.MessageQueue;
 using Tgs.Notification;
 using Tgs.Notification.MessageQueue;
 using Tgs.Notification.Protos;
+using Valhalla.MessageQueue;
 
 namespace Notification.Core.UnitTests;
 
