@@ -25,7 +25,7 @@ internal class NotificationClient : INotificationClient
 				: JsonSerializer.Serialize(payload)
 		};
 
-		return _messageSender.PublishAsync(
+		return _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
 			"tgs.notify.push",
 			request.ToByteArray(),
 			cancellationToken);
@@ -39,7 +39,7 @@ internal class NotificationClient : INotificationClient
 			User = user
 		};
 
-		return _messageSender.PublishAsync(
+		return _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
 			"tgs.notify.accepted",
 			request.ToByteArray(),
 			cancellationToken);
@@ -52,7 +52,7 @@ internal class NotificationClient : INotificationClient
 			User = user
 		};
 
-		return _messageSender.PublishAsync(
+		return _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
 			"tgs.notify.resend",
 			request.ToByteArray(),
 			cancellationToken);

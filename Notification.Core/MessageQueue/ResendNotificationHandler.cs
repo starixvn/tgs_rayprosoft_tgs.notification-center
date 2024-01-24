@@ -5,18 +5,16 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.MessageQueue;
 
-internal class ResendNotificationHandler : IMessageHandler
+internal class ResendNotificationHandler(INotificationStore notificationStroe, IMessageSender messageSender) : IMessageHandler<ReadOnlyMemory<byte>>
 {
-	private readonly INotificationStore _notificationStroe;
-	private readonly IMessageSender _messageSender;
+	private readonly INotificationStore _notificationStroe = notificationStroe ?? throw new ArgumentNullException(nameof(notificationStroe));
+	private readonly IMessageSender _messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
 
-	public ResendNotificationHandler(INotificationStore notificationStroe, IMessageSender messageSender)
-	{
-		_notificationStroe = notificationStroe ?? throw new ArgumentNullException(nameof(notificationStroe));
-		_messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
-	}
-
-	public async ValueTask HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+	public async ValueTask HandleAsync(
+		string subject,
+		ReadOnlyMemory<byte> data,
+		IEnumerable<MessageHeaderValue>? headerValues,
+		CancellationToken cancellationToken = default)
 	{
 		var request = ResendNotificationRequest.Parser.ParseFrom(data.Span);
 
@@ -39,7 +37,7 @@ internal class ResendNotificationHandler : IMessageHandler
 				Payload = JsonSerializer.Serialize(notify.Payload, JsonSerializerOptions.Default)
 			};
 
-			await _messageSender.PublishAsync(
+			await _messageSender.PublishAsync<ReadOnlyMemory<byte>>(
 				"tgs.notify.broadcast",
 				broadcastRequest.ToByteArray(),
 				cancellationToken).ConfigureAwait(false);

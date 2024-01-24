@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Tgs.Notification.Client</PackageId>
-    <Version>0.0.3</Version>
+    <Version>0.1.0</Version>
     <Authors>Raypro</Authors>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs.notification-center</PackageProjectUrl>
     <RepositoryUrl>https://gitlab.com/rayprosoft/tgs.notification-center.git</RepositoryUrl>
@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.24.3" />
-    <PackageReference Include="PhoenixToolkits.MessageQueue" Version="1.0.3" />
+    <PackageReference Include="Google.Protobuf" Version="3.25.2" />
+    <PackageReference Include="PhoenixToolkits.MessageQueue" Version="2.1.0" />
     <PackageReference Include="PhoenixToolkits.NuGet.BuildTools" Version="0.0.3">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

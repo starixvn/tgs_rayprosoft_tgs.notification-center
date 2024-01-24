@@ -34,7 +34,7 @@ public class ResendNotificationHandlerTests
 			}.ToAsyncEnumerable());
 
 		// Act
-		await sut.HandleAsync(request.ToByteArray());
+		await sut.HandleAsync("test", request.ToByteArray(), null);
 
 		// Assert
 		_ = fakeMessageSender.Received(1)

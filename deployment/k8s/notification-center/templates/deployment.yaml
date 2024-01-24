@@ -54,10 +54,10 @@ spec:
               value: "0"
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8080
               protocol: TCP
           volumeMounts:
-            - mountPath: /config/appsettings.json
+            - mountPath: /app/appsettings.Production.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
@@ -75,7 +75,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: monitor
-          image: otel/opentelemetry-collector:0.78.0
+          image: otel/opentelemetry-collector:0.92.0
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - --config=/etc/otel/config.yaml
