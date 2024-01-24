@@ -3,16 +3,11 @@ using StackExchange.Redis;
 
 namespace Tgs.Notification.Repositories;
 
-internal class RedisNotificationStore : INotificationStore
+internal class RedisNotificationStore(IDatabase redisDatabase) : INotificationStore
 {
 	private static readonly RedisKey _NotificationKeyPrefix = "Tgs:Notification";
 	private static readonly JsonSerializerOptions _JsonSerializerOptions = new(JsonSerializerDefaults.Web);
-	private readonly IDatabase _redisDatabase;
-
-	public RedisNotificationStore(IDatabase redisDatabase)
-	{
-		_redisDatabase = redisDatabase ?? throw new ArgumentNullException(nameof(redisDatabase));
-	}
+	private readonly IDatabase _redisDatabase = redisDatabase ?? throw new ArgumentNullException(nameof(redisDatabase));
 
 	public async ValueTask SaveNotificationAsync(PushNotification notification, CancellationToken cancellationToken = default)
 	{

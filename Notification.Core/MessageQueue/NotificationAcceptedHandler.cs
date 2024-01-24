@@ -3,16 +3,15 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.Notification.MessageQueue;
 
-internal class NotificationAcceptedHandler : IMessageHandler
+internal class NotificationAcceptedHandler(INotificationStore notificationStore) : IMessageHandler<ReadOnlyMemory<byte>>
 {
-	private readonly INotificationStore _notificationStore;
+	private readonly INotificationStore _notificationStore = notificationStore ?? throw new ArgumentNullException(nameof(notificationStore));
 
-	public NotificationAcceptedHandler(INotificationStore notificationStore)
-	{
-		_notificationStore = notificationStore ?? throw new ArgumentNullException(nameof(notificationStore));
-	}
-
-	public ValueTask HandleAsync(ReadOnlyMemory<byte> data, CancellationToken cancellationToken = default)
+	public ValueTask HandleAsync(
+		string subject,
+		ReadOnlyMemory<byte> data,
+		IEnumerable<MessageHeaderValue>? headerValues,
+		CancellationToken cancellationToken = default)
 	{
 		var request = BroadcastNotificationAcceptedResponse.Parser.ParseFrom(data.Span);
 

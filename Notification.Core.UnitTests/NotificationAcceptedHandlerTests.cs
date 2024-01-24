@@ -23,7 +23,7 @@ public class NotificationAcceptedHandlerTests
 		};
 
 		// Act
-		await sut.HandleAsync(request.ToByteArray());
+		await sut.HandleAsync("test", request.ToByteArray(), null);
 
 		// Assert
 		_ = fakeNotificationStore.Received(1)

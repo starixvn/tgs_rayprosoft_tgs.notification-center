@@ -1,6 +1,6 @@
 ﻿using FluentdForward.OpenTelemetry.MessagePack;
 using Microsoft.AspNetCore.Mvc;
-using OpenTelemetry.Instrumentation.AspNetCore;
+using NATS.Client.Core;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -38,10 +38,15 @@ builder.Services
 	.AddSingleton(sp => new RedisConnectionManager(
 		builder.Configuration.GetConnectionString("Redis")!))
 	.AddNotificationRepositories(sp => sp.GetRequiredService<RedisConnectionManager>().Database)
+	.AddKeyedSingleton(
+		"Nats",
+		(sp, _) => new NatsConnection(NatsOpts.Default with
+		{
+			Url = builder.Configuration.GetConnectionString("Nats")!
+		}))
 	.AddMessageQueue()
 	.AddNatsMessageQueue(natsConfig => natsConfig
-		.ConfigQueueOptions((options, _) => options.Url =
-			builder.Configuration.GetConnectionString("Nats")!)
+		.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
 		.AddHandler(
 			ProcessorTypes.PushNotificationHandlerType,
 			"tgs.notify.push",
@@ -72,6 +77,7 @@ builder.Services
 			options.IncludeXmlComments(xmlFileName);
 	});
 
+var excludeExtensions = new[] { "html", "ico", "png", "jpg" };
 builder.Services
 	.AddHealthChecks()
 	.Services
@@ -81,20 +87,18 @@ builder.Services
 			.AddEnvironmentVariableDetector())
 		.AddSource("Tgs.*")
 		.AddSource("Valhalla.*")
-		.AddAspNetCoreInstrumentation()
+		.AddAspNetCoreInstrumentation(options => options.Filter =
+			httpContext => !httpContext.Request.Path.HasValue
+				|| !httpContext.Request.Path.StartsWithSegments("/swagger")
+				&& !httpContext.Request.Path.StartsWithSegments("/healthz")
+				&& !httpContext.Request.Path.StartsWithSegments("/metrics")
+				&& !excludeExtensions.Any(
+					ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
 		.AddOtlpExporter())
 	.WithMetrics(meterBuiler => meterBuiler
 		.AddRuntimeInstrumentation()
 		.AddAspNetCoreInstrumentation()
-		.AddOtlpExporter())
-	.Services
-	.Configure<AspNetCoreInstrumentationOptions>(options => options.Filter =
-		httpContext => !httpContext.Request.Path.HasValue
-			|| !httpContext.Request.Path.StartsWithSegments("/swagger")
-			&& !httpContext.Request.Path.StartsWithSegments("/healthz")
-			&& !httpContext.Request.Path.StartsWithSegments("/metrics")
-			&& !new[] { "html", "ico", "png", "jpg" }.Any(
-				ext => httpContext.Request.Path.Value.EndsWith($".{ext}")));
+		.AddOtlpExporter());
 
 var app = builder.Build();
 
